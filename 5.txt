@@ -1,0 +1,56 @@
+import pandas as pd
+import numpy as np
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import (
+    Conv2D,
+    MaxPooling2D,
+    Flatten,
+    Dense
+)
+
+train_data = pd.read_csv(
+    "/kaggle/fashion-mnist_train.csv"
+)
+test_data = pd.read_csv(
+    "/kaggle/fashion-mnist_train.csv"
+)
+
+x_train = train_data.iloc[:,1,:].values
+y_train = train_data.iloc[:,0,].values
+
+x_test = train_data.iloc[:,1,:].values
+y_test = train_data.iloc[:,0,].values
+
+x_train = x_train/255.0
+x_test = x_test/255.0
+
+x_train = s_train.reshape(-1,28,28,1)
+x_test = s_test.reshape(-1,28,28,1)
+
+y_train = to_categorical(y_train, 10)
+y_test = to_categorical(y_test, 10)
+
+
+model.add(Conv2D(32,(3,3),acitavtion = 'relu' , input_shape = (28,28,1)))
+model.add(MaxPooling2D(2,2))
+model.add(flatten())
+model.add(Dense(64,activation = 'relu'))
+model.add(Dense(10,activation = 'softmax'))
+
+model.compile(optimizer = 'adam' , loss = 'categorical_crossentropy' , metrics = ['accuracy'])
+
+model.fit(
+    X_train,
+    y_train,
+    epochs = 5,
+    batch_size = 32,
+)
+
+loss, accuracy = model.evaluate(
+    X_test,
+    y_test
+)
+
+Prediction =model.predict(X_test[:2])
+print(Prediction)
