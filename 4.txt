@@ -1,0 +1,37 @@
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+d = pd.read_csv("IMDB_Dataset.csv" , encoding_errors = 'ignore' , on_bad_lines = 'skip')
+
+x = d['review']
+y = d['sentiment']
+
+y = y.map({"positive":1 , "negative":0})
+
+vectorizer = TfidfVectorizer(max_features = 5000)
+x = vectorizer.fit_transform(x).toarray()
+
+x_train , x_test , y_train , y_test = train_test_split(x,y,test_size = 0.2 , random_state = 42)
+
+model = Sequential()
+
+model.add(Dense(64,activation = 'relu' , input_shape = (x_test.shape[1],)))
+model.add(Dense(32,activation = 'relu'))
+model.add(Dense(1,activation = 'sigmoid'))
+
+model.compile(optimizer = 'adam' , loss = 'binary_crossentropy' , metrics = ['accuracy'])
+
+model.fit(x_train , y_train , epochs = 5 , batch_size = 12)
+
+loss , accuracy = model.evaluate(x_test , y_test)
+
+pred = model.predict(x_test)
+print(pred)
+print(loss)
+print(accuracy)
